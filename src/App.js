@@ -50,40 +50,37 @@ function App() {
   };
 
   // 🤖 AI MESSAGE
-  const sendMessage = async () => {
-    if (!message) return;
+    const sendMessage = async () => {
+  if (!message) return;
 
-    const userMsg = { role: "user", text: message };
-    setChat((prev) => [...prev, userMsg]);
+  const userMsg = { role: "user", text: message };
+  setChat((prev) => [...prev, userMsg]);
 
-    try {
-      const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          Authorization:
-            "Bearer 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",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          model: "arcee-ai/trinity-large-preview:free",
-          messages: [{ role: "user", content: message }],
-        }),
-      });
+  try {
+    const res = await fetch("https://disaster-management-app-qq49.onrender.com/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ message }),
+    });
 
-      const data = await res.json();
+    const data = await res.json();
 
-      const botMsg = {
-        role: "bot",
-        text: data.choices?.[0]?.message?.content || "No response",
-      };
+    const botMsg = {
+      role: "bot",
+      text: data.reply,
+    };
 
-      setChat((prev) => [...prev, botMsg]);
-      setMessage("");
-    } catch {
-      setChat((prev) => [...prev, { role: "bot", text: "⚠️ Error" }]);
-    }
-  };
-
+    setChat((prev) => [...prev, botMsg]);
+    setMessage("");
+  } catch {
+    setChat((prev) => [
+      ...prev,
+      { role: "bot", text: "⚠️ Error connecting to AI" },
+    ]);
+  }
+};
   // 🌍 SUBMIT REPORT
   const submitReport = async () => {
     if (!form.type || !form.name || !form.location) return;
@@ -325,4 +322,4 @@ ${r.safetyTip}`
   );
 }
 
-export default App;
+export default App;gi
